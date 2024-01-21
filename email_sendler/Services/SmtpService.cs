@@ -1,4 +1,3 @@
-using email_sendler.DataLayer;
 using email_sendler.Enums;
 using email_sendler.Interfaces;
 using email_sendler.Models;
@@ -12,11 +11,23 @@ public class SmtpService
 {
     private IOptions<SmtpServiceConfiguration> _configuration;
     private IStorage _storage;
+    
+    /// <summary>
+    /// Service provides email sending via SMTP
+    /// </summary>
+    /// <param name="configuration">Required configuration for SMTP service</param>
+    /// <param name="dbStorageManager">Storage service, which provides saving results of sending</param>
     public SmtpService(IOptions<SmtpServiceConfiguration> configuration, IStorage dbStorageManager)
     {
         _configuration = configuration;
         _storage = dbStorageManager;
     }
+    /// <summary>
+    /// Send email to recipient via SMTP server and log result in DB
+    /// </summary>
+    /// <param name="subject">Subject of email</param>
+    /// <param name="body">Text of email</param>
+    /// <param name="recipientEmail">Recipient of email</param>
     public void SendEmail( string subject, string body, string recipientEmail)
     {
         try

@@ -5,12 +5,16 @@ namespace email_sendler.DataLayer;
 
 public class MySqlStorage : DbContext
 {
-    public DbSet<MailLogModel> Mailes { get; init; }
-    public DbSet<Test> Test { get; init; }
-
+    /// <summary>
+    /// Table in database named "Mails". It maintenances data about email dispatching
+    /// </summary>
+    public DbSet<MailLogModel> Mails { get; init; }
     public MySqlStorage(DbContextOptions<MySqlStorage> options)
         : base(options)
     {
-        Database.EnsureCreated();
+        //В ТЗ указано, что миграции должны быть, поэтому следующую строчку закомментил. 
+        //Иначе миграция будет выдавать ошибку, что таблица уже создана и по сути в них не будет никакого смысла.
+        
+        // Database.EnsureCreated();
     }
 }
