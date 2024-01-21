@@ -1,11 +1,8 @@
-using System.Net.Mime;
 using email_sendler.DataLayer;
 using email_sendler.Interfaces;
-using email_sendler.LogicLayer;
 using email_sendler.Models;
 using email_sendler.Services;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Options;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -15,8 +12,7 @@ builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
-builder.Services.AddHttpContextAccessor();
-// builder.Services.AddScoped<MailManager>();
+// builder.Services.AddHttpContextAccessor();
 builder.Services.AddScoped<IStorage, DbStorageManager>();
 
 builder.Services.Configure<SmtpServiceConfiguration>(builder.Configuration.GetSection("SmtpConfiguration"));
@@ -38,9 +34,6 @@ if (app.Environment.IsDevelopment())
 }
 
 // app.UseHttpsRedirection();
-
 app.UseAuthorization();
-
 app.MapControllers();
-
 app.Run();

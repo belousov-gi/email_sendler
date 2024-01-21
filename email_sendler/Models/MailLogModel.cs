@@ -1,4 +1,6 @@
 using System.ComponentModel.DataAnnotations;
+using System.Runtime.InteropServices;
+using System.Runtime.Serialization;
 using Microsoft.EntityFrameworkCore;
 
 namespace email_sendler.Models;
@@ -10,5 +12,6 @@ public class MailLogModel
     public string Recipient { get; set; }
     public DateTime DateTimeDispatch { get; set; }
     public string Result { get; set; }
-    public string FailedMessage { get; set; }
+    
+    public string? FailedMessage { get; set; }
 }

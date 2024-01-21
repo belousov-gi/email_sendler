@@ -1,3 +1,4 @@
+using System.Text.Json;
 using email_sendler.Interfaces;
 using email_sendler.Models;
 
@@ -5,23 +6,38 @@ namespace email_sendler.DataLayer;
 
 public class DbStorageManager : IStorage
 {
-    private IHttpContextAccessor _httpContextAccessor;
+    private MySqlStorage _storage;
 
-
-    public DbStorageManager(IHttpContextAccessor httpContextAccessor)
+    public DbStorageManager(MySqlStorage mySqlStorage)
     {
-        _httpContextAccessor = httpContextAccessor;
+        _storage = mySqlStorage;
     }
     public void SaveMailInfo(MailLogModel mailoutLogModel)
     {
-        var db = _httpContextAccessor.HttpContext.RequestServices.GetService<MySqlStorage>();
-        db.Mailes.AddAsync(mailoutLogModel);
+        _storage.Mailes.Add(mailoutLogModel);
+        _storage.SaveChanges();
+    }
+    
+    public async void SaveMailInfoAsync(MailLogModel mailoutLogModel)
+    {
+            await _storage.Mailes.AddAsync(mailoutLogModel);
+            _storage.SaveChanges();
     }
 
-    public string GetAllMailes()
+    public JsonDocument GetAllMailes()
     {
-        var db = _httpContextAccessor.HttpContext.RequestServices.GetService<MySqlStorage>();
-        var qq = db.Test.Select(x => x.id);
-        return $"qwe {qq}";
+        var allMailes =_storage.Mailes;
+        var result = JsonSerializer.SerializeToDocument(allMailes);
+        return result;
+    }
+    
+    public async Task<JsonDocument> GetAllMailesAsync()
+    {
+        return await Task<JsonDocument>.Run(()=>
+        {
+            var allMailes =  _storage.Mailes;
+            var result = JsonSerializer.SerializeToDocument(allMailes);
+            return result;
+        });
     }
 }

@@ -1,8 +1,4 @@
-using System.Net.Mime;
-using System.Text.Json;
-using email_sendler.DataLayer;
 using email_sendler.Interfaces;
-using email_sendler.LogicLayer;
 using email_sendler.Models;
 using email_sendler.Services;
 using Microsoft.AspNetCore.Mvc;
@@ -20,7 +16,6 @@ public class MailsController : ControllerBase
 
     public MailsController(SmtpService smtpService, IStorage dbStorageManager)
     {
-        // _mailManager = mailManager;
         _smtpService = smtpService;
         _storage = dbStorageManager;
     }
@@ -35,15 +30,12 @@ public class MailsController : ControllerBase
             
             foreach (var recipient in mailoutInfo.Recipients)
             {
-                _smtpService.SendEmailAsync(subject, body, recipient);
+                _smtpService.SendEmail(subject, body, recipient);
             }
-            
-            // var response = _mailManager.MakeMailout(mailoutInfo);
             return Ok();
         }
         catch (Exception e)
         {
-            Console.WriteLine(e);
             return BadRequest(e);
         }
     }
@@ -53,15 +45,12 @@ public class MailsController : ControllerBase
     {
         try
         {
-            var response = _storage.GetAllMailes();
-            return Ok(response);
+            var response = _storage.GetAllMailesAsync();
+            return Ok(response.Result);
         }
         catch (Exception e)
         {
-            Console.WriteLine(e);
             return BadRequest(e);
         }
     }
-    
-    
 }
